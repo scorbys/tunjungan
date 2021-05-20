@@ -1,0 +1,43 @@
+#header{
+    /* background-image: linear-gradient(40deg, #065E55 20%,white); */
+    background-color: #065E55;
+  }
+  #registrasi:hover{
+    background-color: #065E55;
+  }
+  @media(min-width: 678px){
+    #navigasi{
+      display: none;
+    }
+  }
+  #warna {
+    color: white;
+  }
+  #no {
+    width: 20px;
+  }
+  #opsi {
+    width: 200px;
+  }
+  #img-admin {
+    width: 150px;
+  }
+  #tanggal{
+    width: 40%;
+  }
+  #tgl-login{
+    color: #fff;
+    font-weight: 900;
+  }
+  @media(max-width: 768px){
+    #scroll{
+      
+    }
+    #warna{
+      display: none;
+    }
+    #tgl-login{
+      color: white;
+      text-align: center;
+    }
+  }

@@ -1,0 +1,21 @@
+
+RewriteOptions inherit
+RewriteEngine on
+RewriteCond $1 !^(index\.php|robots\.txt)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?/$1 [L]
+ 
+RewriteCond %{HTTP_HOST} ^management\.7indora\.com$
+RewriteRule ^/?$ "https\:\/\/app\.7indora\.com\/" [R=301,L]
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-SSL} !on
+RewriteCond %{HTTP_HOST} ^app\.7indora\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.app\.7indora\.com$
+RewriteRule ^/?$ "https\:\/\/app\.7indora\.com\/" [R=301,L]
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-SSL} !on
+RewriteCond %{HTTP_HOST} ^app\.kudtunjungan\.id$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.app\.kudtunjungan\.id$
+RewriteRule ^/?$ "https\:\/\/app\.kudtunjungan\.id\/" [R=301,L]
+
