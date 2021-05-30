@@ -814,6 +814,78 @@ class Ppob extends MY_Controller {
                 $this->load->view('kasir/invoice-ppob-pln',$data);
                 $this->load->view('kasir/footer',$data);
                 break;
+            case 'pascabayar':
+                $data["title"]		= "PPOB";
+                $data['akun']		= $this->m_akun->cek_admin($this->session->userdata('tunjungan@id_user'))->result();
+                $data['ppob_limit']	= $this->m_ppob->tampil_data_limit()->result();
+                $data['ppob']	    = $this->m_ppob->tampil_data()->result();
+                $data['id']         = $b;
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/head',$data);
+                $this->load->view('kasir/menu',$data);
+                $this->load->view('kasir/invoice-ppob-pascabayar',$data);
+                $this->load->view('kasir/footer',$data);
+                break;
+            case 'kereta':
+                $data["title"]		= "PPOB";
+                $data['akun']		= $this->m_akun->cek_admin($this->session->userdata('tunjungan@id_user'))->result();
+                $data['ppob_limit']	= $this->m_ppob->tampil_data_limit()->result();
+                $data['ppob']	    = $this->m_ppob->tampil_data()->result();
+                $data['id']         = $b;
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/head',$data);
+                $this->load->view('kasir/menu',$data);
+                $this->load->view('kasir/invoice-ppob-kereta',$data);
+                $this->load->view('kasir/footer',$data);
+                break;
+            case 'telkom':
+                $data["title"]		= "PPOB";
+                $data['akun']		= $this->m_akun->cek_admin($this->session->userdata('tunjungan@id_user'))->result();
+                $data['ppob_limit']	= $this->m_ppob->tampil_data_limit()->result();
+                $data['ppob']	    = $this->m_ppob->tampil_data()->result();
+                $data['id']         = $b;
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/head',$data);
+                $this->load->view('kasir/menu',$data);
+                $this->load->view('kasir/invoice-ppob-telkom',$data);
+                $this->load->view('kasir/footer',$data);
+                break;
+            case 'internet':
+                $data["title"]		= "PPOB";
+                $data['akun']		= $this->m_akun->cek_admin($this->session->userdata('tunjungan@id_user'))->result();
+                $data['ppob_limit']	= $this->m_ppob->tampil_data_limit()->result();
+                $data['ppob']	    = $this->m_ppob->tampil_data()->result();
+                $data['id']         = $b;
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/head',$data);
+                $this->load->view('kasir/menu',$data);
+                $this->load->view('kasir/invoice-ppob-internet',$data);
+                $this->load->view('kasir/footer',$data);
+                break;
+            case 'bus':
+                $data["title"]		= "PPOB";
+                $data['akun']		= $this->m_akun->cek_admin($this->session->userdata('tunjungan@id_user'))->result();
+                $data['ppob_limit']	= $this->m_ppob->tampil_data_limit()->result();
+                $data['ppob']	    = $this->m_ppob->tampil_data()->result();
+                $data['id']         = $b;
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/head',$data);
+                $this->load->view('kasir/menu',$data);
+                $this->load->view('kasir/invoice-ppob-bus',$data);
+                $this->load->view('kasir/footer',$data);
+                break;
+            case 'bpjs':
+                $data["title"]		= "PPOB";
+                $data['akun']		= $this->m_akun->cek_admin($this->session->userdata('tunjungan@id_user'))->result();
+                $data['ppob_limit']	= $this->m_ppob->tampil_data_limit()->result();
+                $data['ppob']	    = $this->m_ppob->tampil_data()->result();
+                $data['id']         = $b;
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/head',$data);
+                $this->load->view('kasir/menu',$data);
+                $this->load->view('kasir/invoice-ppob-bpjs',$data);
+                $this->load->view('kasir/footer',$data);
+                break;
             
             default:
                 # code...
@@ -914,6 +986,7 @@ class Ppob extends MY_Controller {
                 
                 redirect(base_url('kasir/ppob/invoice/pulsa/'.$id_trx));
                 break;
+
             case 'data':
                 date_default_timezone_set('UTC');
                 $userid         = 'vikosha';
@@ -1038,6 +1111,390 @@ class Ppob extends MY_Controller {
                 }
                 
                 break;
+            
+            case 'pascabayar':
+                date_default_timezone_set('UTC');
+                $userid         = 'vikosha';
+                $apikey         = 'wl65IoeCZPae7ToRgNAjZHitADwQPbXHcBbfL4rlzjtKrFnqNGauUXkpDmuQRhYm';
+                $inttime        = strval(time()-strtotime('1970-01-01 00:00:00'));
+                $signature      = hash_hmac('sha256', "$userid&$inttime", $apikey, true); 
+                $signature64    = base64_encode($signature);
+                $json       = '{
+                                "jsonrpc": "2.0",
+                                "id": 1,
+                                "method": "advice",
+                                "params": {
+                                        "data": [{
+                                                "invoice_no": "'.$b.'"
+                                            }]
+                                        }
+                                }
+                            ';
+                $curl  = curl_init();
+                
+                curl_setopt($curl, CURLOPT_URL, 'https://live.agratek.id/api/merchant');
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+                curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                    'Accept:application/json',
+                	'userid:'.$userid,
+                	'signature:'.$signature64,
+                	'key:'.$inttime
+                ]);
+                $response = curl_exec($curl);  
+                $data = json_decode($response,FALSE);
+                date_default_timezone_set("Asia/jakarta");
+                if($data->result[0]->produk[0]->status == 'SUCCESS'){
+                    $id_pel             = $data->result[0]->produk[0]->id_pel;
+                    $code               = $data->result[0]->produk[0]->denom;
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' AND id_pel = '$id_pel' AND denom = '$code' LIMIT 1")->row()->id_trx;
+                    $hasil              = array(
+                                        'invoice_no' => $b,
+                                        'status' => $data->result[0]->produk[0]->status,
+                                        'message' => 'Transaksi token listrik ke'.$data->result[0]->produk[0]->id_pel.' berhasil',
+                                        'serial_number' => $data->result[0]->produk[0]->serial_number,
+                                        'tgl_sukses' => date('Y-m-d H:i:s')
+                    );
+                    $where				= array('invoice_no' => $b);
+                    $this->m_crud->update_data('tbl_trx_ppob_agratek',$hasil,$where);
+                    $riwayat            = array(
+                                        'tanggal' => date('Y-m-d H:i:s'),
+                                        'status' => 'SUCCESS'
+                    );
+                    $where_riwayat		= array('id_trx' => $id_trx);
+                    $this->m_crud->update_data('tbl_riwayat',$riwayat,$where_riwayat);
+                    
+                    $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Sukses !</strong> Data transaksi sukses.</b></div>');
+                    redirect(base_url('kasir/ppob/invoice/pln/'.$id_trx));
+                }
+                else{
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' LIMIT 1")->row()->id_trx;
+                    $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Peringatan !</strong> Data transaksi gagal dengan pesan <b>'.$data->result[0]->produk[0]->message.'</b></div>');
+                
+                    redirect(base_url('kasir/ppob/invoice/pln/'.$id_trx));
+                }
+                
+                break;
+            
+            case 'kereta':
+                date_default_timezone_set('UTC');
+                $userid         = 'vikosha';
+                $apikey         = 'wl65IoeCZPae7ToRgNAjZHitADwQPbXHcBbfL4rlzjtKrFnqNGauUXkpDmuQRhYm';
+                $inttime        = strval(time()-strtotime('1970-01-01 00:00:00'));
+                $signature      = hash_hmac('sha256', "$userid&$inttime", $apikey, true); 
+                $signature64    = base64_encode($signature);
+                $json       = '{
+                                "jsonrpc": "2.0",
+                                "id": 1,
+                                "method": "advice",
+                                "params": {
+                                        "data": [{
+                                                "invoice_no": "'.$b.'"
+                                            }]
+                                        }
+                                }
+                            ';
+                $curl  = curl_init();
+                
+                curl_setopt($curl, CURLOPT_URL, 'https://live.agratek.id/api/merchant');
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+                curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                    'Accept:application/json',
+                	'userid:'.$userid,
+                	'signature:'.$signature64,
+                	'key:'.$inttime
+                ]);
+                $response = curl_exec($curl);  
+                $data = json_decode($response,FALSE);
+                date_default_timezone_set("Asia/jakarta");
+                if($data->result[0]->produk[0]->status == 'SUCCESS'){
+                    $id_pel             = $data->result[0]->produk[0]->id_pel;
+                    $code               = $data->result[0]->produk[0]->denom;
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' AND id_pel = '$id_pel' AND denom = '$code' LIMIT 1")->row()->id_trx;
+                    $hasil              = array(
+                                        'invoice_no' => $b,
+                                        'status' => $data->result[0]->produk[0]->status,
+                                        'message' => 'Transaksi token listrik ke'.$data->result[0]->produk[0]->id_pel.' berhasil',
+                                        'serial_number' => $data->result[0]->produk[0]->serial_number,
+                                        'tgl_sukses' => date('Y-m-d H:i:s')
+                    );
+                    $where				= array('invoice_no' => $b);
+                    $this->m_crud->update_data('tbl_trx_ppob_agratek',$hasil,$where);
+                    $riwayat            = array(
+                                        'tanggal' => date('Y-m-d H:i:s'),
+                                        'status' => 'SUCCESS'
+                    );
+                    $where_riwayat		= array('id_trx' => $id_trx);
+                    $this->m_crud->update_data('tbl_riwayat',$riwayat,$where_riwayat);
+                    
+                    $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Sukses !</strong> Data transaksi sukses.</b></div>');
+                    redirect(base_url('kasir/ppob/invoice/kereta/'.$id_trx));
+                }
+                else{
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' LIMIT 1")->row()->id_trx;
+                    $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Peringatan !</strong> Data transaksi gagal dengan pesan <b>'.$data->result[0]->produk[0]->message.'</b></div>');
+                
+                    redirect(base_url('kasir/ppob/invoice/kereta/'.$id_trx));
+                }
+                
+                break;
+
+            case 'telkom':
+                date_default_timezone_set('UTC');
+                $userid         = 'vikosha';
+                $apikey         = 'wl65IoeCZPae7ToRgNAjZHitADwQPbXHcBbfL4rlzjtKrFnqNGauUXkpDmuQRhYm';
+                $inttime        = strval(time()-strtotime('1970-01-01 00:00:00'));
+                $signature      = hash_hmac('sha256', "$userid&$inttime", $apikey, true); 
+                $signature64    = base64_encode($signature);
+                $json       = '{
+                                "jsonrpc": "2.0",
+                                "id": 1,
+                                "method": "advice",
+                                "params": {
+                                        "data": [{
+                                                "invoice_no": "'.$b.'"
+                                            }]
+                                        }
+                                }
+                            ';
+                $curl  = curl_init();
+                
+                curl_setopt($curl, CURLOPT_URL, 'https://live.agratek.id/api/merchant');
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+                curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                    'Accept:application/json',
+                	'userid:'.$userid,
+                	'signature:'.$signature64,
+                	'key:'.$inttime
+                ]);
+                $response = curl_exec($curl);  
+                $data = json_decode($response,FALSE);
+                date_default_timezone_set("Asia/jakarta");
+                if($data->result[0]->produk[0]->status == 'SUCCESS'){
+                    $id_pel             = $data->result[0]->produk[0]->id_pel;
+                    $code               = $data->result[0]->produk[0]->denom;
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' AND id_pel = '$id_pel' AND denom = '$code' LIMIT 1")->row()->id_trx;
+                    $hasil              = array(
+                                        'invoice_no' => $b,
+                                        'status' => $data->result[0]->produk[0]->status,
+                                        'message' => 'Transaksi token listrik ke'.$data->result[0]->produk[0]->id_pel.' berhasil',
+                                        'serial_number' => $data->result[0]->produk[0]->serial_number,
+                                        'tgl_sukses' => date('Y-m-d H:i:s')
+                    );
+                    $where				= array('invoice_no' => $b);
+                    $this->m_crud->update_data('tbl_trx_ppob_agratek',$hasil,$where);
+                    $riwayat            = array(
+                                        'tanggal' => date('Y-m-d H:i:s'),
+                                        'status' => 'SUCCESS'
+                    );
+                    $where_riwayat		= array('id_trx' => $id_trx);
+                    $this->m_crud->update_data('tbl_riwayat',$riwayat,$where_riwayat);
+                    
+                    $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Sukses !</strong> Data transaksi sukses.</b></div>');
+                    redirect(base_url('kasir/ppob/invoice/telom/'.$id_trx));
+                }
+                else{
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' LIMIT 1")->row()->id_trx;
+                    $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Peringatan !</strong> Data transaksi gagal dengan pesan <b>'.$data->result[0]->produk[0]->message.'</b></div>');
+                
+                    redirect(base_url('kasir/ppob/invoice/telkom/'.$id_trx));
+                }
+                
+                break;
+
+            case 'internet':
+                date_default_timezone_set('UTC');
+                $userid         = 'vikosha';
+                $apikey         = 'wl65IoeCZPae7ToRgNAjZHitADwQPbXHcBbfL4rlzjtKrFnqNGauUXkpDmuQRhYm';
+                $inttime        = strval(time()-strtotime('1970-01-01 00:00:00'));
+                $signature      = hash_hmac('sha256', "$userid&$inttime", $apikey, true); 
+                $signature64    = base64_encode($signature);
+                $json       = '{
+                                "jsonrpc": "2.0",
+                                "id": 1,
+                                "method": "advice",
+                                "params": {
+                                        "data": [{
+                                                "invoice_no": "'.$b.'"
+                                            }]
+                                        }
+                                }
+                            ';
+                $curl  = curl_init();
+                
+                curl_setopt($curl, CURLOPT_URL, 'https://live.agratek.id/api/merchant');
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+                curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                    'Accept:application/json',
+                	'userid:'.$userid,
+                	'signature:'.$signature64,
+                	'key:'.$inttime
+                ]);
+                $response = curl_exec($curl);  
+                $data = json_decode($response,FALSE);
+                date_default_timezone_set("Asia/jakarta");
+                if($data->result[0]->produk[0]->status == 'SUCCESS'){
+                    $id_pel             = $data->result[0]->produk[0]->id_pel;
+                    $code               = $data->result[0]->produk[0]->denom;
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' AND id_pel = '$id_pel' AND denom = '$code' LIMIT 1")->row()->id_trx;
+                    $hasil              = array(
+                                        'invoice_no' => $b,
+                                        'status' => $data->result[0]->produk[0]->status,
+                                        'message' => 'Transaksi token listrik ke'.$data->result[0]->produk[0]->id_pel.' berhasil',
+                                        'serial_number' => $data->result[0]->produk[0]->serial_number,
+                                        'tgl_sukses' => date('Y-m-d H:i:s')
+                    );
+                    $where				= array('invoice_no' => $b);
+                    $this->m_crud->update_data('tbl_trx_ppob_agratek',$hasil,$where);
+                    $riwayat            = array(
+                                        'tanggal' => date('Y-m-d H:i:s'),
+                                        'status' => 'SUCCESS'
+                    );
+                    $where_riwayat		= array('id_trx' => $id_trx);
+                    $this->m_crud->update_data('tbl_riwayat',$riwayat,$where_riwayat);
+                    
+                    $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Sukses !</strong> Data transaksi sukses.</b></div>');
+                    redirect(base_url('kasir/ppob/invoice/internet/'.$id_trx));
+                }
+                else{
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' LIMIT 1")->row()->id_trx;
+                    $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Peringatan !</strong> Data transaksi gagal dengan pesan <b>'.$data->result[0]->produk[0]->message.'</b></div>');
+                
+                    redirect(base_url('kasir/ppob/invoice/internet/'.$id_trx));
+                }
+                
+                break;
+            
+            case 'bus':
+                date_default_timezone_set('UTC');
+                $userid         = 'vikosha';
+                $apikey         = 'wl65IoeCZPae7ToRgNAjZHitADwQPbXHcBbfL4rlzjtKrFnqNGauUXkpDmuQRhYm';
+                $inttime        = strval(time()-strtotime('1970-01-01 00:00:00'));
+                $signature      = hash_hmac('sha256', "$userid&$inttime", $apikey, true); 
+                $signature64    = base64_encode($signature);
+                $json       = '{
+                                "jsonrpc": "2.0",
+                                "id": 1,
+                                "method": "advice",
+                                "params": {
+                                        "data": [{
+                                                "invoice_no": "'.$b.'"
+                                            }]
+                                        }
+                                }
+                            ';
+                $curl  = curl_init();
+                
+                curl_setopt($curl, CURLOPT_URL, 'https://live.agratek.id/api/merchant');
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+                curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                    'Accept:application/json',
+                	'userid:'.$userid,
+                	'signature:'.$signature64,
+                	'key:'.$inttime
+                ]);
+                $response = curl_exec($curl);  
+                $data = json_decode($response,FALSE);
+                date_default_timezone_set("Asia/jakarta");
+                if($data->result[0]->produk[0]->status == 'SUCCESS'){
+                    $id_pel             = $data->result[0]->produk[0]->id_pel;
+                    $code               = $data->result[0]->produk[0]->denom;
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' AND id_pel = '$id_pel' AND denom = '$code' LIMIT 1")->row()->id_trx;
+                    $hasil              = array(
+                                        'invoice_no' => $b,
+                                        'status' => $data->result[0]->produk[0]->status,
+                                        'message' => 'Transaksi token listrik ke'.$data->result[0]->produk[0]->id_pel.' berhasil',
+                                        'serial_number' => $data->result[0]->produk[0]->serial_number,
+                                        'tgl_sukses' => date('Y-m-d H:i:s')
+                    );
+                    $where				= array('invoice_no' => $b);
+                    $this->m_crud->update_data('tbl_trx_ppob_agratek',$hasil,$where);
+                    $riwayat            = array(
+                                        'tanggal' => date('Y-m-d H:i:s'),
+                                        'status' => 'SUCCESS'
+                    );
+                    $where_riwayat		= array('id_trx' => $id_trx);
+                    $this->m_crud->update_data('tbl_riwayat',$riwayat,$where_riwayat);
+                    
+                    $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Sukses !</strong> Data transaksi sukses.</b></div>');
+                    redirect(base_url('kasir/ppob/invoice/bus/'.$id_trx));
+                }
+                else{
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' LIMIT 1")->row()->id_trx;
+                    $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Peringatan !</strong> Data transaksi gagal dengan pesan <b>'.$data->result[0]->produk[0]->message.'</b></div>');
+                
+                    redirect(base_url('kasir/ppob/invoice/bus/'.$id_trx));
+                }
+                
+                break;
+            
+            case 'bpjs':
+                date_default_timezone_set('UTC');
+                $userid         = 'vikosha';
+                $apikey         = 'wl65IoeCZPae7ToRgNAjZHitADwQPbXHcBbfL4rlzjtKrFnqNGauUXkpDmuQRhYm';
+                $inttime        = strval(time()-strtotime('1970-01-01 00:00:00'));
+                $signature      = hash_hmac('sha256', "$userid&$inttime", $apikey, true); 
+                $signature64    = base64_encode($signature);
+                $json       = '{
+                                "jsonrpc": "2.0",
+                                "id": 1,
+                                "method": "advice",
+                                "params": {
+                                        "data": [{
+                                                "invoice_no": "'.$b.'"
+                                            }]
+                                        }
+                                }
+                            ';
+                $curl  = curl_init();
+                
+                curl_setopt($curl, CURLOPT_URL, 'https://live.agratek.id/api/merchant');
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
+                curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                    'Accept:application/json',
+                	'userid:'.$userid,
+                	'signature:'.$signature64,
+                	'key:'.$inttime
+                ]);
+                $response = curl_exec($curl);  
+                $data = json_decode($response,FALSE);
+                date_default_timezone_set("Asia/jakarta");
+                if($data->result[0]->produk[0]->status == 'SUCCESS'){
+                    $id_pel             = $data->result[0]->produk[0]->id_pel;
+                    $code               = $data->result[0]->produk[0]->denom;
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' AND id_pel = '$id_pel' AND denom = '$code' LIMIT 1")->row()->id_trx;
+                    $hasil              = array(
+                                        'invoice_no' => $b,
+                                        'status' => $data->result[0]->produk[0]->status,
+                                        'message' => 'Transaksi token listrik ke'.$data->result[0]->produk[0]->id_pel.' berhasil',
+                                        'serial_number' => $data->result[0]->produk[0]->serial_number,
+                                        'tgl_sukses' => date('Y-m-d H:i:s')
+                    );
+                    $where				= array('invoice_no' => $b);
+                    $this->m_crud->update_data('tbl_trx_ppob_agratek',$hasil,$where);
+                    $riwayat            = array(
+                                        'tanggal' => date('Y-m-d H:i:s'),
+                                        'status' => 'SUCCESS'
+                    );
+                    $where_riwayat		= array('id_trx' => $id_trx);
+                    $this->m_crud->update_data('tbl_riwayat',$riwayat,$where_riwayat);
+                    
+                    $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Sukses !</strong> Data transaksi sukses.</b></div>');
+                    redirect(base_url('kasir/ppob/invoice/bpjs/'.$id_trx));
+                }
+                else{
+                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$b' LIMIT 1")->row()->id_trx;
+                    $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Peringatan !</strong> Data transaksi gagal dengan pesan <b>'.$data->result[0]->produk[0]->message.'</b></div>');
+                
+                    redirect(base_url('kasir/ppob/invoice/bpjs/'.$id_trx));
+                }
+                
+                break;
             default:
                 # code...
                 break;
@@ -1071,6 +1528,48 @@ class Ppob extends MY_Controller {
                 $data['kasir']	    = $this->session->userdata('tunjungan@id_user');
                 $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
                 $this->load->view('kasir/cetak-token',$data);
+                break;
+            
+            case 'pasca':
+                $data['id']         = $b;
+                $data['kasir']	    = $this->session->userdata('tunjungan@id_user');
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/cetak-pasca',$data);
+                break;
+
+            case 'kereta':
+                $data['id']         = $b;
+                $data['kasir']	    = $this->session->userdata('tunjungan@id_user');
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/cetak-kereta',$data);
+                break;
+            
+            case 'telkom':
+                $data['id']         = $b;
+                $data['kasir']	    = $this->session->userdata('tunjungan@id_user');
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/cetak-telkom',$data);
+                break;
+            
+            case 'internet':
+                $data['id']         = $b;
+                $data['kasir']	    = $this->session->userdata('tunjungan@id_user');
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/cetak-internet',$data);
+                break;
+
+            case 'bus':
+                $data['id']         = $b;
+                $data['kasir']	    = $this->session->userdata('tunjungan@id_user');
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/cetak-bus',$data);
+                break;
+            
+            case 'bpjs':
+                $data['id']         = $b;
+                $data['kasir']	    = $this->session->userdata('tunjungan@id_user');
+                $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
+                $this->load->view('kasir/cetak-bpjs',$data);
                 break;
             
             default:
