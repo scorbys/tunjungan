@@ -814,7 +814,7 @@ class Ppob extends MY_Controller {
                 $this->load->view('kasir/invoice-ppob-pln',$data);
                 $this->load->view('kasir/footer',$data);
                 break;
-            case 'pascabayar':
+            case 'pasca':
                 $data["title"]		= "PPOB";
                 $data['akun']		= $this->m_akun->cek_admin($this->session->userdata('tunjungan@id_user'))->result();
                 $data['ppob_limit']	= $this->m_ppob->tampil_data_limit()->result();
@@ -823,7 +823,7 @@ class Ppob extends MY_Controller {
                 $data['transaksi']  = $this->m_ppob->tampil_data_transaksi($b)->result();
                 $this->load->view('kasir/head',$data);
                 $this->load->view('kasir/menu',$data);
-                $this->load->view('kasir/invoice-ppob-pascabayar',$data);
+                $this->load->view('kasir/invoice-ppob-pasca',$data);
                 $this->load->view('kasir/footer',$data);
                 break;
             case 'kereta':
@@ -1112,7 +1112,7 @@ class Ppob extends MY_Controller {
                 
                 break;
             
-            case 'pascabayar':
+            case 'pasca':
                 date_default_timezone_set('UTC');
                 $userid         = 'vikosha';
                 $apikey         = 'wl65IoeCZPae7ToRgNAjZHitADwQPbXHcBbfL4rlzjtKrFnqNGauUXkpDmuQRhYm';
