@@ -87,8 +87,6 @@
                                             <tr>
                                                 <th>No. Meteran</th>
                                                 <th>Nama Pelanggan</th>
-                                                <th>Tegangan</th>
-                                                <th>Meter</th>
                                                 <th>Pokok</th>
                                                 <th>Admin</th>
                                                 <th>Denda</th>
@@ -99,8 +97,6 @@
                                             <tr>
                                                 <td><?= $id_pel ?></td>
                                                 <td><?= $nama ?></td>
-                                                <td><?= $no_meter ?></td>
-                                                <td><?= $meter ?></td>
                                                 <td><?= rupiah($pokok) ?></td>
                                                 <td><?= rupiah($admin) ?></td>
                                                 <td><?= rupiah($denda) ?></td>
