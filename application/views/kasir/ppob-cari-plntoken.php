@@ -1,4 +1,4 @@
-  <div class="content-wrapper">
+<div class="content-wrapper">
     <section class="content-header">
       <h1>
         <?= $title ?>
@@ -17,7 +17,9 @@
                             <h4 id="warna">Selamat datang di <b>KUD Tunjungan</b></h4>
                         </div>
                         <div id="tgl-login">
-                            <h4><strong>Saldo PPOB : <?= rupiah($saldo) ?></strong></h4>
+                        <h4>
+                                <strong>Saldo PPOB : <?= rupiah($saldo) ?></strong>
+                            </h4>
                         </div>
                     </div>
                 </div>

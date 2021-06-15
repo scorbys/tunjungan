@@ -522,7 +522,7 @@ class Ppob extends MY_Controller {
                 $response               = curl_exec($curl);  
                 $hasil                  = json_decode($response,FALSE);
                 
-                //print_r($hasil);
+                print_r($hasil);
                 
                 if($hasil->result[0]->status != 'SUCCESS')
                 {
@@ -547,6 +547,7 @@ class Ppob extends MY_Controller {
                 $data['akun']		= $this->m_akun->cek_admin($this->session->userdata('tunjungan@id_user'))->result();
                 $data['ppob_limit']	= $this->m_ppob->tampil_data_limit()->result();
                 $data['ppob']	    = $this->m_ppob->tampil_data()->result();
+                $data['saldo']      = $rest->saldo;
                 $this->load->view('kasir/head-ppob',$data);
                 $this->load->view('kasir/menu',$data);
                 $this->load->view('kasir/ppob-cari-plntoken',$data);
@@ -661,11 +662,11 @@ class Ppob extends MY_Controller {
                 $data['serial_number']  = $hasil->result[0]->serial_number;
                 $data['denom']          = $hasil->result[0]->denom;
                 
-                
                 $data["title"]		= "PPOB";
                 $data['akun']		= $this->m_akun->cek_admin($this->session->userdata('tunjungan@id_user'))->result();
                 $data['ppob_limit']	= $this->m_ppob->tampil_data_limit()->result();
                 $data['ppob']	    = $this->m_ppob->tampil_data()->result();
+                $data['saldo']      = $rest->saldo;
                 $this->load->view('kasir/head-ppob',$data);
                 $this->load->view('kasir/menu',$data);
                 $this->load->view('kasir/ppob-cari-plnpasca',$data);
@@ -680,92 +681,7 @@ class Ppob extends MY_Controller {
     public function pln($a,$b,$c,$d=NULL){
         switch ($a){
             case 'pasca':
-                date_default_timezone_set('UTC');
-                $userid         = 'vikosha';
-                $apikey         = 'xERJWKDrMu6fogUHfXl2kNY4Vs7PpcGSuYjVFyGz9LiKdChQmwXqEdazs5anQeDI';
-                //$apikey         = 'wl65IoeCZPae7ToRgNAjZHitADwQPbXHcBbfL4rlzjtKrFnqNGauUXkpDmuQRhYm';
-                $inttime        = strval(time()-strtotime('1970-01-01 00:00:00'));
-                $signature      = hash_hmac('sha256', "$userid&$inttime", $apikey, true); 
-                $signature64    = base64_encode($signature);
-                if($this->db->query("SELECT invoice_no+1  FROM tbl_trx_ppob_agratek WHERE SUBSTR(tgl_sukses,1,10) = date(now()) ORDER BY id_trx DESC LIMIT 1")->num_rows() > 0){
-                    $invoice_no = $this->db->query("SELECT invoice_no+7 AS invoice_no  FROM tbl_trx_ppob_agratek WHERE SUBSTR(tgl_sukses,1,10) = date(now()) ORDER BY id_trx DESC LIMIT 1")->row()->invoice_no;
-                }else{
-                    $invoice_no = date('Ymd').'1';
-                }
-                $json           = '{
-                                    "jsonrpc": "2.0",
-                                     "id": 1,
-                                     "method": "purchase",
-                                     "params": {
-                                        "data": [{
-                                            "invoice_no": "'.$invoice_no.'",
-                                            "produk": [{
-                                                "denom": "'.$c.'",
-                                                "id_pel": "'.$b.'"
-                                            }]
-                                        }]
-                                    }
-                                }';  
-                $curl = curl_init();
                 
-                //curl_setopt($curl, CURLOPT_URL, 'https://live.agratek.id/api/merchant');
-                curl_setopt($curl, CURLOPT_URL, 'https://devel.agratek.id/api/merchant');
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, $json);
-                curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                	'Accept:application/json',
-                	'userid:'.$userid,
-                	'signature:'.$signature64,
-                	'key:'.$inttime
-                ));
-                $response = curl_exec($curl);  
-                $data = json_decode($response,FALSE);
-                
-                date_default_timezone_set("Asia/jakarta");
-                $harga_jual             = $this->db->query("SELECT harga+fee_vikosha+ifnull(biaya_admin,0) AS harga_jual FROM tbl_produk_agratek WHERE code_produk = '$c' LIMIT 1")->row()->harga_jual;
-                if($data->result[0]->produk[0]->status != 'FAILED'){
-                    $hasil              = array(
-                                        'id_admin' => $this->session->userdata('tunjungan@id_user'),
-                                        'invoice_no' => $invoice_no,
-                                        'message' => $data->result[0]->produk[0]->message,
-                                        'id_pel' => $data->result[0]->produk[0]->id_pel,
-                                        'code' => $data->result[0]->produk[0]->code,
-                                        'total' => $data->result[0]->produk[0]->total,
-                                        'subtotal' => $data->result[0]->produk[0]->subtotal,
-                                        'status' => $data->result[0]->produk[0]->status,
-                                        'discount' => $data->result[0]->produk[0]->discount,
-                                        'denom' => $data->result[0]->produk[0]->denom,
-                                        'harga_jual' => $harga_jual,
-                                        'id' => $data->id,
-                                        'metode' => 3,
-                                        'tgl_sukses' => date('Y-m-d H:i:s'),
-                                        'id_agen' => $d
-                    );
-                    $id_pel             = $data->result[0]->produk[0]->id_pel;
-                    $this->m_crud->tambah_data($hasil,'tbl_trx_ppob_agratek');
-                    $id_trx     		= $this->db->query("SELECT id_trx FROM tbl_trx_ppob_agratek WHERE invoice_no = '$invoice_no' AND id_pel = '$id_pel' AND denom = '$c' LIMIT 1")->row()->id_trx;
-                    
-                    $riwayat            = array(
-                                        'id_user' => NULL,
-                                        'id_trx' => $id_trx,
-                                        'id_admin' => $this->session->userdata('tunjungan@id_user'),
-                                        'judul' => 'PLN',
-                                        'deskripsi' => $hp.' '.$code,
-                                        'nominal' => $harga_jual,
-                                        'tanggal' => date('Y-m-d H:i:s'),
-                                        'keterangan' => 'PPOB',
-                                        'ref_id' => $invoice_no,
-                                        'status' => $data->result[0]->produk[0]->status,
-                                        'penyedia' => 'AGRATEK',
-                                        'metode' => 3,
-                                        'img' => 'icon_riwayat_pln.png'
-                    );
-                    $this->m_crud->tambah_data($riwayat,'tbl_riwayat');
-                    redirect(base_url('kasir/ppob/invoice/pasca/'.$id_trx));
-                }else{
-                    $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <strong>Peringatan !</strong> Data transaksi gagal dengan pesan <b>'.$data->data->message.'</b></div>');
-                    redirect(base_url('kasir/ppob/menu/pln'));
-                }
                 break;
             default :
                 date_default_timezone_set('UTC');
